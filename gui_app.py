@@ -10,7 +10,6 @@ from logic import (
 MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
-# Simple personas for presets
 PERSONAS = {
     "Custom": None,
     "High cost oncology patient": {
