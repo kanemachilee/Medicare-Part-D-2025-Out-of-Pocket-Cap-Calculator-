@@ -1,22 +1,20 @@
 CAP = 2000.0
 MONTHS_IN_YEAR = 12
 
-# A simple front-loaded spending pattern across 12 months.
-# These weights sum to 1.0 and represent the share of the year's spending
-# that "naturally" falls in each month without any smoothing.
+
 SPENDING_WEIGHTS = [
-    0.15,  # Jan
-    0.12,  # Feb
-    0.11,  # Mar
-    0.10,  # Apr
-    0.10,  # May
+    0.15,  # Ja
+    0.12,  # Fe
+    0.11,  # Ma
+    0.10,  # Ap
+    0.10,  # Ma
     0.08,  # Jun
     0.08,  # Jul
-    0.07,  # Aug
-    0.07,  # Sep
-    0.06,  # Oct
-    0.04,  # Nov
-    0.02,  # Dec
+    0.07,  # Au
+    0.07,  # Se
+    0.06,  # Oc
+    0.04,  # No
+    0.02,  # De
 ]
 
 
@@ -30,10 +28,9 @@ def _build_spending(annual_oop_estimate: float, cap: float | None) -> list[float
 
     Uses a fixed front-loaded pattern and adjusts for any tiny rounding error.
     """
-    # Prevent negative inputs
     total = max(annual_oop_estimate, 0.0)
 
-    # Apply cap if provided
+  
     if cap is not None:
         total = min(total, cap)
 
@@ -42,7 +39,7 @@ def _build_spending(annual_oop_estimate: float, cap: float | None) -> list[float
 
     baseline = [w * total for w in SPENDING_WEIGHTS]
 
-    # Numerical safety: fix small rounding so sum == total
+   
     diff = total - sum(baseline)
     baseline[-1] += diff
 
@@ -84,13 +81,13 @@ def compute_monthly_with_smoothing(annual_oop_estimate: float, start_month: int)
 
     Returns a list of 12 floats: what the beneficiary pays each month.
     """
-    # Clamp start_month into [1, 12]
+
     if start_month < 1:
         start_month = 1
     elif start_month > 12:
         start_month = 12
 
-    # Baseline pattern under the cap
+
     baseline_cap = compute_monthly_without_smoothing(annual_oop_estimate)
     total_cap = sum(baseline_cap)
 
@@ -99,18 +96,18 @@ def compute_monthly_with_smoothing(annual_oop_estimate: float, start_month: int)
 
     payments = [0.0] * MONTHS_IN_YEAR
 
-    # Months before smoothing: pay baseline
+
     for month in range(1, start_month):
         payments[month - 1] = baseline_cap[month - 1]
 
-    # How much has been paid before smoothing starts
+  
     paid_so_far = sum(baseline_cap[: start_month - 1])
     remaining_balance = max(total_cap - paid_so_far, 0.0)
 
     remaining_months = MONTHS_IN_YEAR - (start_month - 1)
 
     if remaining_months <= 0 or remaining_balance == 0:
-        # Nothing left to smooth or no months left
+ 
         return payments
 
     smoothed_monthly = remaining_balance / remaining_months
@@ -118,7 +115,7 @@ def compute_monthly_with_smoothing(annual_oop_estimate: float, start_month: int)
     for month in range(start_month, MONTHS_IN_YEAR + 1):
         payments[month - 1] = smoothed_monthly
 
-    # Numerical safety: adjust tiny rounding differences
+   
     total_paid = sum(payments)
     if total_paid > total_cap:
         diff = total_paid - total_cap
