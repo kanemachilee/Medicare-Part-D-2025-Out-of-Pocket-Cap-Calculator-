@@ -1,6 +1,6 @@
 # Medicare Part D 2025 Out-of-Pocket Cap Explorer
 
-<img width="714" height="751" alt="Image" src="https://github.com/user-attachments/assets/15c632a5-5e0d-4bd7-944f-c05a08fbeefc" />
+<img width="300" height="350" alt="Image" src="https://github.com/user-attachments/assets/15c632a5-5e0d-4bd7-944f-c05a08fbeefc" />
 
 project to understand how the new 2025 Medicare Part D $2,000 out-of-pocket ceiling plays out month by month. CMS has a lot of documentation but not much you can interact with so this is my attempt at a simple visual explainer.
 It’s a pure Python + tkinter thing (no external libraries). So if you have Python 3.11 installed, it should basically just run.
